@@ -1,26 +1,28 @@
-package com.imooc.concurrency.annoations;
+package com.imooc.concurrency.example.count;
 
+import com.imooc.concurrency.annoations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ *  使用Synchronized来实现计数
  * @author xuzhangwang
  */
 @Slf4j
-@NotThreadSafe
-public class ConcurrencyTest {
-
+@ThreadSafe
+public class CountExample3 {
     /** 请求总数 */
     private static int clientTotal = 5000;
 
     /** 同时并发执行的线程数*/
     private static int threadTotal = 200;
 
-    private static int count = 0;
+    private static AtomicInteger count = new AtomicInteger(0);
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -40,12 +42,12 @@ public class ConcurrencyTest {
             }) ;
         }
         countDownLatch.await();
-        log.info("count:{}", count);
+        log.info("count:{}", count.get());
         executorService.shutdown();
     }
 
 
-    public static void add() {
-        count++;
+    public synchronized static void add() {
+        count.incrementAndGet();
     }
 }

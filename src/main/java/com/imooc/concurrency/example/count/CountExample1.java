@@ -1,19 +1,22 @@
-package com.imooc.concurrency.annoations;
+package com.imooc.concurrency.example.count;
 
+import com.imooc.concurrency.annoations.NotThreadSafe;
+import com.imooc.concurrency.annoations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 计数， 线程不安全的写法
  * @author xuzhangwang
  */
 @Slf4j
 @NotThreadSafe
-public class ConcurrencyTest {
-
+public class CountExample1 {
     /** 请求总数 */
     private static int clientTotal = 5000;
 
@@ -21,7 +24,6 @@ public class ConcurrencyTest {
     private static int threadTotal = 200;
 
     private static int count = 0;
-
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
         final Semaphore semaphore = new Semaphore(threadTotal);

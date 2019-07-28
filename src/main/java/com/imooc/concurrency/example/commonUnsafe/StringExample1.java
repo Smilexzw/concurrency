@@ -1,4 +1,4 @@
-package com.imooc.concurrency.annoations;
+package com.imooc.concurrency.example.commonUnsafe;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,8 +11,7 @@ import java.util.concurrent.Semaphore;
  * @author xuzhangwang
  */
 @Slf4j
-@NotThreadSafe
-public class ConcurrencyTest {
+public class StringExample1 {
 
     /** 请求总数 */
     private static int clientTotal = 5000;
@@ -20,8 +19,7 @@ public class ConcurrencyTest {
     /** 同时并发执行的线程数*/
     private static int threadTotal = 200;
 
-    private static int count = 0;
-
+    private static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
         final Semaphore semaphore = new Semaphore(threadTotal);
@@ -30,7 +28,7 @@ public class ConcurrencyTest {
             executorService.execute(() -> {
                 try {
                     semaphore.acquire();
-                    add();
+                    update();
                     semaphore.release();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -40,12 +38,12 @@ public class ConcurrencyTest {
             }) ;
         }
         countDownLatch.await();
-        log.info("count:{}", count);
+        log.info("count:{}", sb.length());
         executorService.shutdown();
     }
 
 
-    public static void add() {
-        count++;
+    public static void update() {
+        sb.append("1");
     }
 }
